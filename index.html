@@ -28,7 +28,6 @@
             color: var(--text-main); line-height: 1.6; overflow: hidden; 
         }
 
-        *:focus-visible { outline: 3px solid var(--accent-red); outline-offset: 3px; }
         a { color: var(--accent-blue); text-decoration: none; border-bottom: 1px solid transparent; transition: all 0.2s; }
         a:hover { color: var(--accent-red); border-bottom-color: var(--accent-red); }
 
@@ -38,6 +37,7 @@
             grid-template-rows: 70px calc(100vh - 150px) 80px;
             grid-template-areas: "navbar navbar" "map sidebar" "footer footer";
             height: 100vh; max-width: 1800px; margin: 0 auto;
+            position: relative;
         }
 
         header {
@@ -57,18 +57,22 @@
         }
 
         .world-label-abstract { position: absolute; font-family: var(--font-serif); font-size: 5rem; color: var(--primary-dark); opacity: 0.1; font-weight:bold; top: 40%; left: 30%; z-index: 1; pointer-events: none; }
-        .map-year-display { position: absolute; top: 2.5rem; left: 2.5rem; font-family: var(--font-serif); font-size: 5rem; color: var(--primary-dark); opacity: 0.2; pointer-events: none; font-weight: bold; z-index: 1; }
+        
+        .map-year-display { 
+            position: absolute; top: 2.5rem; left: 2.5rem; font-family: var(--font-serif); 
+            font-size: 5rem; color: var(--primary-dark); opacity: 0; pointer-events: none; 
+            font-weight: bold; z-index: 1; 
+        }
 
         .node {
             position: absolute; width: 18px; height: 18px; border-radius: 50%;
             background-color: var(--accent-red); border: 3px solid white;
             box-shadow: 0 0 0 5px rgba(165, 28, 48, 0.2), var(--shadow-md);
-            cursor: pointer; z-index: 10;
-            transition: opacity 0.4s, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            opacity: 0; transform: scale(0);
+            z-index: 10; opacity: 0; transform: scale(0); cursor: pointer; pointer-events: none;
+            transition: transform 0.2s; /* Only hover is animated, appearances are instant stills */
         }
         .node-gov { background-color: #555555; box-shadow: 0 0 0 5px rgba(85, 85, 85, 0.2); }
-        .node:hover, .node-active { transform: scale(1.5) !important; z-index: 20; border-color: #fff; box-shadow: 0 0 0 8px rgba(165, 28, 48, 0.3); }
+        .node:hover { transform: scale(1.5); z-index: 20; border-color: #fff; box-shadow: 0 0 0 8px rgba(165, 28, 48, 0.3); }
 
         .node-label {
             position: absolute; top: 26px; left: 50%; transform: translateX(-50%);
@@ -78,7 +82,7 @@
         }
 
         .data-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
-        .data-line { stroke: var(--accent-blue); stroke-width: 2.5; fill: none; opacity: 0; transition: opacity 0.6s; stroke-dasharray: 6 4; }
+        .data-line { stroke: var(--accent-blue); stroke-width: 2.5; fill: none; opacity: 0; stroke-dasharray: 6 4; }
 
         .legend {
             position: absolute; bottom: 20px; right: 20px; background: rgba(255,255,255,0.95);
@@ -91,29 +95,32 @@
             grid-area: sidebar; background-color: var(--bg-surface);
             margin: 1.5rem 1.5rem 1.5rem 0; border-radius: var(--border-radius);
             box-shadow: var(--shadow-lg); padding: 2.5rem 2rem;
-            border-top: 5px solid var(--accent-red); position: relative; overflow-y: auto; 
+            border-top: 5px solid var(--accent-red); overflow-y: auto; position: relative;
         }
 
+        .node-content { display: none; } /* Hidden by default */
+        
         .photo-container {
             width: 100%; height: 200px; margin-bottom: 1.5rem; 
             border-radius: 6px; overflow: hidden; position: relative;
             background-color: #E2E8F0; border: 1px solid #CBD5E1;
         }
-        #node-image { width: 100%; height: 100%; object-fit: cover; display: none; }
+        .photo-container img { width: 100%; height: 100%; object-fit: cover; }
         .image-fallback {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             background: linear-gradient(135deg, #F1F5F9 0%, #E2E8F0 100%);
             color: var(--text-light); font-family: var(--font-sans); font-size: 0.85rem; text-align: center;
+            z-index: -1; /* Sits behind the image */
         }
 
-        #aside-title { font-family: var(--font-serif); font-size: 1.8rem; color: var(--primary-dark); margin-bottom: 0.5rem; line-height: 1.2;}
-        #aside-tags { display: inline-block; background: #E2E8F0; color: var(--accent-blue); padding: 4px 12px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-bottom: 1.5rem; text-transform: uppercase;}
-        #aside-desc { font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.6;}
+        aside h2 { font-family: var(--font-serif); font-size: 1.8rem; color: var(--primary-dark); margin-bottom: 0.5rem; line-height: 1.2;}
+        .aside-tags { display: inline-block; background: #E2E8F0; color: var(--accent-blue); padding: 4px 12px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-bottom: 1.5rem; text-transform: uppercase;}
+        .aside-desc { font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.6;}
 
-        #aside-specs { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
-        #aside-specs th, #aside-specs td { padding: 10px 0; border-bottom: 1px solid #E2E8F0; font-size: 0.85rem; }
-        #aside-specs th { text-align: left; color: var(--primary-dark); font-weight: 600; width: 45%; }
+        .aside-specs { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+        .aside-specs th, .aside-specs td { padding: 10px 0; border-bottom: 1px solid #E2E8F0; font-size: 0.85rem; }
+        .aside-specs th { text-align: left; color: var(--primary-dark); font-weight: 600; width: 45%; }
 
         .external-link-btn {
             display: inline-flex; align-items: center; justify-content: center;
@@ -127,28 +134,95 @@
 
         .default-aside-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; color: var(--text-light); }
 
-        footer { grid-area: footer; background: var(--bg-surface); display: flex; align-items: center; padding: 0 3rem; box-shadow: 0 -4px 12px rgba(0,0,0,0.03); z-index: 100; }
-        .playback-btn {
-            background: var(--primary-dark); color: white; border: none; width: 50px; height: 50px;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; margin-right: 3rem; transition: background 0.2s; box-shadow: var(--shadow-md);
+        footer { 
+            grid-area: footer; background: var(--bg-surface); display: flex; align-items: center; 
+            padding: 0 3rem; box-shadow: 0 -4px 12px rgba(0,0,0,0.03); z-index: 100; justify-content: center;
         }
-        .playback-btn:hover { background: var(--accent-red); }
-        .timeline-wrapper { flex-grow: 1; position: relative; }
-        .timeline-labels { display: flex; justify-content: space-between; font-weight: bold; color: var(--text-light); font-size: 0.85rem; margin-bottom: 10px; text-transform: uppercase;}
-        input[type="range"] { width: 100%; height: 8px; background: #E2E8F0; border-radius: 4px; outline: none; -webkit-appearance: none; cursor: pointer; }
-        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--accent-red); cursor: pointer; border: 4px solid white; box-shadow: var(--shadow-sm); }
+        .timeline-tabs { display: flex; gap: 1rem; align-items: center;}
+        .timeline-tabs span { font-weight: bold; font-size: 0.85rem; color: var(--text-light); margin-right: 1rem; text-transform: uppercase;}
+        .tab-btn {
+            padding: 10px 24px; border-radius: 30px; background: #E2E8F0; color: var(--primary-dark);
+            font-weight: bold; font-size: 0.9rem; cursor: pointer; transition: all 0.2s ease; border: 2px solid transparent;
+        }
+        .tab-btn:hover { background: #CBD5E1; }
+
+        input[type="radio"] { display: none; }
+
+        
+        #t-1969:checked ~ footer label[for="t-1969"],
+        #t-1970:checked ~ footer label[for="t-1970"],
+        #t-1973:checked ~ footer label[for="t-1973"],
+        #t-1975:checked ~ footer label[for="t-1975"] {
+            background: var(--accent-red); color: white; border-color: #8A1527;
+        }
+
+        #t-1969:checked ~ main #disp-1969,
+        #t-1970:checked ~ main #disp-1970,
+        #t-1973:checked ~ main #disp-1973,
+        #t-1975:checked ~ main #disp-1975 { opacity: 0.2; }
+
+        #t-1969:checked ~ main .y-1969, #t-1970:checked ~ main .y-1969,
+        #t-1973:checked ~ main .y-1969, #t-1975:checked ~ main .y-1969 { opacity: 1; transform: scale(1); pointer-events: auto; }
+        #t-1969:checked ~ main .line-1969, #t-1970:checked ~ main .line-1969,
+        #t-1973:checked ~ main .line-1969, #t-1975:checked ~ main .line-1969 { opacity: 0.6; }
+
+        #t-1970:checked ~ main .y-1970, #t-1973:checked ~ main .y-1970,
+        #t-1975:checked ~ main .y-1970 { opacity: 1; transform: scale(1); pointer-events: auto; }
+        #t-1970:checked ~ main .line-1970, #t-1973:checked ~ main .line-1970,
+        #t-1975:checked ~ main .line-1970 { opacity: 0.6; }
+
+        #t-1973:checked ~ main .y-1973, #t-1975:checked ~ main .y-1973 { opacity: 1; transform: scale(1); pointer-events: auto; }
+        #t-1973:checked ~ main .line-1973, #t-1975:checked ~ main .line-1973 { opacity: 0.6; }
+
+        #t-1975:checked ~ main .y-1975 { opacity: 1; transform: scale(1); pointer-events: auto; }
+        #t-1975:checked ~ main .line-1975 { opacity: 0.6; }
+
+
+        #n-ucla:checked ~ aside #default-aside-state,
+        #n-sri:checked ~ aside #default-aside-state,
+        #n-utah:checked ~ aside #default-aside-state,
+        #n-govt:checked ~ aside #default-aside-state,
+        #n-mit:checked ~ aside #default-aside-state { display: none; }
+
+        #n-ucla:checked ~ aside #content-ucla { display: block; }
+        #n-sri:checked ~ aside #content-sri { display: block; }
+        #n-utah:checked ~ aside #content-utah { display: block; }
+        #n-govt:checked ~ aside #content-govt { display: block; }
+        #n-mit:checked ~ aside #content-mit { display: block; }
+
+        #n-ucla:checked ~ main #node-ucla,
+        #n-sri:checked ~ main #node-sri,
+        #n-utah:checked ~ main #node-utah,
+        #n-govt:checked ~ main #node-govt,
+        #n-mit:checked ~ main #node-mit { 
+            transform: scale(1.5); z-index: 20; border-color: #fff; box-shadow: 0 0 0 8px rgba(165, 28, 48, 0.3); 
+        }
 
         @media (max-width: 950px) {
             .dashboard { grid-template-columns: 1fr; grid-template-rows: auto 50vh auto auto; grid-template-areas: "navbar" "map" "sidebar" "footer"; height: auto; }
             main, aside { margin: 1rem; border-radius: 12px; }
             header { flex-direction: column; padding: 1.5rem; gap: 1rem; text-align: center; }
+            .timeline-tabs { flex-wrap: wrap; justify-content: center; padding: 1rem 0;}
+            .timeline-tabs span { width: 100%; text-align: center; margin-bottom: 0.5rem;}
         }
     </style>
 </head>
 <body>
 
     <div class="dashboard">
+        
+        <input type="radio" name="timeline" id="t-1969" checked>
+        <input type="radio" name="timeline" id="t-1970">
+        <input type="radio" name="timeline" id="t-1973">
+        <input type="radio" name="timeline" id="t-1975">
+
+        <input type="radio" name="active-node" id="n-none" checked>
+        <input type="radio" name="active-node" id="n-ucla">
+        <input type="radio" name="active-node" id="n-sri">
+        <input type="radio" name="active-node" id="n-utah">
+        <input type="radio" name="active-node" id="n-govt">
+        <input type="radio" name="active-node" id="n-mit">
+
         <header>
             <div class="brand"><h1>ARPANET Archive <span>/ Genesis Nodes</span></h1></div>
             <nav aria-label="Main Navigation">
@@ -161,20 +235,24 @@
 
         <main aria-label="Interactive Map">
             <div class="world-label-abstract">UNITED STATES</div>
-            <div class="map-year-display" id="year-display">1969</div>
+            
+            <div class="map-year-display" id="disp-1969">1969</div>
+            <div class="map-year-display" id="disp-1970">1970</div>
+            <div class="map-year-display" id="disp-1973">1973</div>
+            <div class="map-year-display" id="disp-1975">1975</div>
             
             <svg class="data-lines" width="100%" height="100%">
-                <path class="data-line" data-year="1969" d="M 22% 52% Q 30% 45% 38% 57%" />
-                <path class="data-line" data-year="1970" d="M 22% 52% L 25% 65%" />
-                <path class="data-line" data-year="1973" d="M 25% 65% L 40% 68%" /> 
-                <path class="data-line" data-year="1975" d="M 38% 57% Q 60% 30% 85% 40%" />
+                <path class="data-line line-1969" d="M 22% 52% Q 30% 45% 38% 57%" />
+                <path class="data-line line-1970" d="M 22% 52% L 25% 65%" />
+                <path class="data-line line-1973" d="M 25% 65% L 40% 68%" /> 
+                <path class="data-line line-1975" d="M 38% 57% Q 60% 30% 85% 40%" />
             </svg>
 
-            <div class="node" id="node-ucla" data-year="1969" style="top: 60%; left: 20%;" tabindex="0"><div class="node-label">UCLA</div></div>
-            <div class="node" id="node-sri" data-year="1969" style="top: 50%; left: 25%;" tabindex="0"><div class="node-label">SRI</div></div>
-            <div class="node" id="node-utah" data-year="1970" style="top: 55%; left: 35%;" tabindex="0"><div class="node-label">UTAH</div></div>
-            <div class="node node-gov" id="node-govt" data-year="1973" style="top: 68%; left: 40%;" tabindex="0"><div class="node-label">RAND</div></div>
-            <div class="node" id="node-mit" data-year="1975" style="top: 38%; left: 85%;" tabindex="0"><div class="node-label">MIT</div></div>
+            <label for="n-ucla" class="node y-1969" id="node-ucla" style="top: 60%; left: 20%;"><div class="node-label">UCLA</div></label>
+            <label for="n-sri" class="node y-1969" id="node-sri" style="top: 50%; left: 25%;"><div class="node-label">SRI</div></label>
+            <label for="n-utah" class="node y-1970" id="node-utah" style="top: 55%; left: 35%;"><div class="node-label">UTAH</div></label>
+            <label for="n-govt" class="node node-gov y-1973" id="node-govt" style="top: 68%; left: 40%;"><div class="node-label">RAND</div></label>
+            <label for="n-mit" class="node y-1975" id="node-mit" style="top: 38%; left: 85%;"><div class="node-label">MIT</div></label>
 
             <div class="legend" aria-hidden="true">
                 <div class="legend-item"><span class="dot" style="background:var(--accent-red)"></span>University Host</div>
@@ -188,204 +266,126 @@
                 <p style="margin-top:1rem;">Select a network node<br>to view exhibit data.</p>
             </div>
 
-            <div id="node-content-state" style="display:none;">
-                
+            <div id="content-ucla" class="node-content">
                 <div class="photo-container">
-                    <img id="node-image" src="" alt="Historical Archive Photo">
-                    <div id="image-fallback" class="image-fallback">
+                    <div class="image-fallback">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-bottom:8px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-                        <span>Local image pending.<br>Save as: <b id="fallback-filename">image.jpg</b></span>
+                        <span>Local image pending.<br>Save as: <b>images/ucla.jpg</b></span>
                     </div>
+                    <img src="images/ucla.jpg" alt="UCLA Node" onerror="this.style.display='none'">
                 </div>
-                
-                <h2 id="aside-title"></h2>
-                <span id="aside-tags"></span>
-                <p id="aside-desc"></p>
-                <table id="aside-specs"><tbody id="specs-body"></tbody></table>
-                
-                <div id="aside-link-container"></div>
-
-                <p style="font-size: 0.85rem; color: var(--text-light); border-top: 1px solid #E2E8F0; padding-top: 1rem;">
-                    Archival Interface v1.0
-                </p>
+                <h2>University of California, Los Angeles</h2>
+                <span class="aside-tags">Host 01 / ARPANET Birthplace</span>
+                <p class="aside-desc">As the birthplace of the ARPANET, UCLA was selected to house the world's first Interface Message Processor (IMP) built by BBN. Under the leadership of Leonard Kleinrock, who pioneered the mathematical theory of packet switching, UCLA served as the Network Measurement Center.<br><br>On October 29, 1969, student programmer Charley Kline attempted to send the first host-to-host message to SRI. He typed "L", then "O". As he typed "G" for "LOGIN", the system crashed. Thus, the first message on the precursor to the internet was simply "LO".</p>
+                <table class="aside-specs"><tbody>
+                    <tr><th scope="row">Date Online</th><td>Sept 2, 1969</td></tr>
+                    <tr><th scope="row">Hardware System</th><td>SDS Sigma 7 / IMP #1</td></tr>
+                    <tr><th scope="row">Key Figure</th><td>Leonard Kleinrock</td></tr>
+                </tbody></table>
+                <a href="https://conferences.ucla.edu/ucla-birthplace-of-the-internet/" target="_blank" rel="noopener noreferrer" class="external-link-btn">
+                    View Historical Records <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                </a>
             </div>
+
+            <div id="content-sri" class="node-content">
+                <div class="photo-container">
+                    <div class="image-fallback">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-bottom:8px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                        <span>Local image pending.<br>Save as: <b>images/sri.jpg</b></span>
+                    </div>
+                    <img src="images/sri.jpg" alt="SRI Node" onerror="this.style.display='none'">
+                </div>
+                <h2>Stanford Research Institute (SRI)</h2>
+                <span class="aside-tags">Host 02 / NLS Research</span>
+                <p class="aside-desc">The Stanford Research Institute received the second IMP and was the recipient of the famous "LO" message. SRI was home to Douglas Engelbart's visionary Augmentation Research Center (ARC).<br><br>Having recently demonstrated the computer mouse, hypertext, and networked collaboration (NLS) in the 1968 "Mother of All Demos", SRI served as the Network Information Center (NIC) during the early ARPANET days, maintaining the official directory of all network nodes—essentially the early internet's yellow pages.</p>
+                <table class="aside-specs"><tbody>
+                    <tr><th scope="row">Date Online</th><td>Oct 1, 1969</td></tr>
+                    <tr><th scope="row">Hardware System</th><td>SDS 940 / IMP #2</td></tr>
+                    <tr><th scope="row">Key Figure</th><td>Douglas Engelbart</td></tr>
+                </tbody></table>
+                <a href="https://www.sri.com/story/timeline/arpanet/" target="_blank" rel="noopener noreferrer" class="external-link-btn">
+                    View Historical Records <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                </a>
+            </div>
+
+            <div id="content-utah" class="node-content">
+                <div class="photo-container">
+                    <div class="image-fallback">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-bottom:8px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                        <span>Local image pending.<br>Save as: <b>images/utah.jpg</b></span>
+                    </div>
+                    <img src="images/utah.jpg" alt="Utah Node" onerror="this.style.display='none'">
+                </div>
+                <h2>University of Utah</h2>
+                <span class="aside-tags">Host 04 / Computer Graphics</span>
+                <p class="aside-desc">Including the University of Utah as the fourth ARPANET node was a strategic choice designed to prove the network could share specialized, heterogeneous computing resources.<br><br>Led by computer graphics pioneer Ivan Sutherland, Utah was the global epicenter of 3D visual computing and the birthplace of the famous Utah Teapot. By connecting their powerful DEC PDP-10 mainframe to the network, researchers nationwide could remotely access cutting-edge graphics software, proving the ARPANET was a distributed computing platform.</p>
+                <table class="aside-specs"><tbody>
+                    <tr><th scope="row">Date Online</th><td>Early 1970</td></tr>
+                    <tr><th scope="row">Hardware System</th><td>DEC PDP-10 / IMP #4</td></tr>
+                    <tr><th scope="row">Key Figure</th><td>Ivan Sutherland</td></tr>
+                </tbody></table>
+                <a href="https://www.lib.utah.edu/digital-scholarship/arpanet/" target="_blank" rel="noopener noreferrer" class="external-link-btn">
+                    View Historical Records <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                </a>
+            </div>
+
+            <div id="content-govt" class="node-content">
+                <div class="photo-container">
+                    <div class="image-fallback">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-bottom:8px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                        <span>Local image pending.<br>Save as: <b>images/rand.jpg</b></span>
+                    </div>
+                    <img src="images/rand.jpg" alt="RAND Node" onerror="this.style.display='none'">
+                </div>
+                <h2>RAND Corporation</h2>
+                <span class="aside-tags">Node 07 / Military & Policy</span>
+                <p class="aside-desc">Located in Santa Monica, the RAND Corporation represents the crucial military and strategic origins of the ARPANET.<br><br>Driven by Cold War nuclear threats in the early 1960s, RAND researcher Paul Baran authored pioneering papers on distributed communications. He envisioned a survivable network without a central command hub, utilizing message blocks. This meant the network could continue operating even if partial nodes were destroyed by a nuclear strike. RAND's connection physically linked this classified defense theory with ARPA's academic engineering.</p>
+                <table class="aside-specs"><tbody>
+                    <tr><th scope="row">Date Online</th><td>Oct 1973</td></tr>
+                    <tr><th scope="row">Hardware System</th><td>IBM 370/158</td></tr>
+                    <tr><th scope="row">Key Figure</th><td>Paul Baran</td></tr>
+                </tbody></table>
+                <a href="https://www.rand.org/about/history/baran.html" target="_blank" rel="noopener noreferrer" class="external-link-btn">
+                    View Historical Records <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                </a>
+            </div>
+
+            <div id="content-mit" class="node-content">
+                <div class="photo-container">
+                    <div class="image-fallback">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-bottom:8px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                        <span>Local image pending.<br>Save as: <b>images/mit.jpg</b></span>
+                    </div>
+                    <img src="images/mit.jpg" alt="MIT Node" onerror="this.style.display='none'">
+                </div>
+                <h2>Massachusetts Institute of Technology</h2>
+                <span class="aside-tags">Host 15 / MULTICS Project</span>
+                <p class="aside-desc">As an East Coast academic powerhouse, MIT brought immense computing weight to the ARPANET. It was the home base of J.C.R. Licklider, who first conceptualized the "Intergalactic Computer Network" while serving as an ARPA director.<br><br>MIT's Project MAC utilized the ARPANET heavily to advance time-sharing operating system research, specifically the MULTICS project. MIT researchers played a central role in writing the early RFCs (Request for Comments) that defined the software protocol standards of the modern internet.</p>
+                <table class="aside-specs"><tbody>
+                    <tr><th scope="row">Date Online</th><td>Dec 1975</td></tr>
+                    <tr><th scope="row">Hardware System</th><td>DEC PDP-10 / IMP #15</td></tr>
+                    <tr><th scope="row">Key Figure</th><td>J.C.R. Licklider</td></tr>
+                </tbody></table>
+                <a href="https://archivesspace.mit.edu/agents/corporate_entities/148" target="_blank" rel="noopener noreferrer" class="external-link-btn">
+                    View Historical Records <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                </a>
+            </div>
+
+            <p style="font-size: 0.85rem; color: var(--text-light); border-top: 1px solid #E2E8F0; padding-top: 1rem; position: absolute; bottom: 2rem;">
+                Archival Interface v1.0
+            </p>
         </aside>
 
         <footer>
-            <button class="playback-btn" id="play-btn">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
-            </button>
-            <div class="timeline-wrapper">
-                <div class="timeline-labels">
-                    <span>1969</span><span>1975</span><span>1980</span><span>1985</span><span>1990</span>
-                </div>
-                <input type="range" id="timeline-slider" min="1969" max="1990" value="1969">
+            <div class="timeline-tabs">
+                <span>Select Snapshot:</span>
+                <label for="t-1969" class="tab-btn">1969</label>
+                <label for="t-1970" class="tab-btn">1970</label>
+                <label for="t-1973" class="tab-btn">1973</label>
+                <label for="t-1975" class="tab-btn">1975</label>
             </div>
         </footer>
     </div>
 
-    <script>
-        const nodeExhibitData = {
-            'node-ucla': {
-                title: 'University of California, Los Angeles',
-                tags: 'Host 01 / ARPANET Birthplace',
-                imagePath: 'images/ucla.jpg', 
-                desc: 'As the birthplace of the ARPANET, UCLA was selected to house the world\'s first Interface Message Processor (IMP) built by BBN. Under the leadership of Leonard Kleinrock, who pioneered the mathematical theory of packet switching, UCLA served as the Network Measurement Center.<br><br>On October 29, 1969, student programmer Charley Kline attempted to send the first host-to-host message to SRI. He typed "L", then "O". As he typed "G" for "LOGIN", the system crashed. Thus, the first message on the precursor to the internet was simply "LO".',
-                specs: { 'Date Online': 'Sept 2, 1969', 'Hardware System': 'SDS Sigma 7 / IMP #1', 'Key Figure': 'Leonard Kleinrock' },
-                officialUrl: 'https://conferences.ucla.edu/ucla-birthplace-of-the-internet/'
-            },
-            'node-sri': {
-                title: 'Stanford Research Institute (SRI)',
-                tags: 'Host 02 / NLS Research',
-                imagePath: 'images/sri.jpg',
-                desc: 'The Stanford Research Institute received the second IMP and was the recipient of the famous "LO" message. SRI was home to Douglas Engelbart\'s visionary Augmentation Research Center (ARC).<br><br>Having recently demonstrated the computer mouse, hypertext, and networked collaboration (NLS) in the 1968 "Mother of All Demos", SRI served as the Network Information Center (NIC) during the early ARPANET days, maintaining the official directory of all network nodes—essentially the early internet\'s yellow pages.',
-                specs: { 'Date Online': 'Oct 1, 1969', 'Hardware System': 'SDS 940 / IMP #2', 'Key Figure': 'Douglas Engelbart' },
-                officialUrl: 'https://www.sri.com/story/timeline/arpanet/'
-            },
-            'node-utah': {
-                title: 'University of Utah',
-                tags: 'Host 04 / Computer Graphics',
-                imagePath: 'images/utah.jpg',
-                desc: 'Including the University of Utah as the fourth ARPANET node was a strategic choice designed to prove the network could share specialized, heterogeneous computing resources.<br><br>Led by computer graphics pioneer Ivan Sutherland, Utah was the global epicenter of 3D visual computing and the birthplace of the famous Utah Teapot. By connecting their powerful DEC PDP-10 mainframe to the network, researchers nationwide could remotely access cutting-edge graphics software, proving the ARPANET was a distributed computing platform.',
-                specs: { 'Date Online': 'Early 1970', 'Hardware System': 'DEC PDP-10 / IMP #4', 'Key Figure': 'Ivan Sutherland' },
-                officialUrl: 'https://www.lib.utah.edu/digital-scholarship/arpanet/'
-            },
-            'node-govt': {
-                title: 'RAND Corporation',
-                tags: 'Node 07 / Military & Policy',
-                imagePath: 'images/rand.jpg',
-                desc: 'Located in Santa Monica, the RAND Corporation represents the crucial military and strategic origins of the ARPANET.<br><br>Driven by Cold War nuclear threats in the early 1960s, RAND researcher Paul Baran authored pioneering papers on distributed communications. He envisioned a survivable network without a central command hub, utilizing message blocks. This meant the network could continue operating even if partial nodes were destroyed by a nuclear strike. RAND\'s connection physically linked this classified defense theory with ARPA\'s academic engineering.',
-                specs: { 'Date Online': 'Oct 1973', 'Hardware System': 'IBM 370/158', 'Key Figure': 'Paul Baran' },
-                officialUrl: 'https://www.rand.org/about/history/baran.html'
-            },
-            'node-mit': {
-                title: 'Massachusetts Institute of Technology',
-                tags: 'Host 15 / MULTICS Project',
-                imagePath: 'images/mit.jpg',
-                desc: 'As an East Coast academic powerhouse, MIT brought immense computing weight to the ARPANET. It was the home base of J.C.R. Licklider, who first conceptualized the "Intergalactic Computer Network" while serving as an ARPA director.<br><br>MIT\'s Project MAC utilized the ARPANET heavily to advance time-sharing operating system research, specifically the MULTICS project. MIT researchers played a central role in writing the early RFCs (Request for Comments) that defined the software protocol standards of the modern internet.',
-                specs: { 'Date Online': 'Dec 1975', 'Hardware System': 'DEC PDP-10 / IMP #15', 'Key Figure': 'J.C.R. Licklider' },
-                officialUrl: 'https://archivesspace.mit.edu/agents/corporate_entities/148'
-            }
-        };
-
-        const playBtn = document.getElementById('play-btn');
-        const slider = document.getElementById('timeline-slider');
-        const yearDisplay = document.getElementById('year-display');
-        const nodes = document.querySelectorAll('.node');
-        const lines = document.querySelectorAll('.data-line');
-        
-        const defaultState = document.getElementById('default-aside-state');
-        const contentState = document.getElementById('node-content-state');
-        
-        const nodeImage = document.getElementById('node-image');
-        const imageFallback = document.getElementById('image-fallback');
-        const fallbackFilename = document.getElementById('fallback-filename');
-
-        const asideTitle = document.getElementById('aside-title');
-        const asideTags = document.getElementById('aside-tags');
-        const asideDesc = document.getElementById('aside-desc');
-        const specsBody = document.getElementById('specs-body');
-        const asideLinkContainer = document.getElementById('aside-link-container'); 
-
-        const playIcon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>`;
-        const pauseIcon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
-        const externalIcon = `<svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>`;
-
-        let isPlaying = false;
-        let playInterval;
-
-        function loadImage(path) {
-            nodeImage.style.display = 'none';
-            imageFallback.style.display = 'flex';
-            fallbackFilename.innerText = path; 
-
-            nodeImage.onload = function() {
-                imageFallback.style.display = 'none'; 
-                nodeImage.style.display = 'block';    
-            };
-            nodeImage.onerror = function() {
-                nodeImage.style.display = 'none';
-                imageFallback.style.display = 'flex';
-            };
-            nodeImage.src = path;
-        }
-
-        function selectAndDisplayNode(nodeId) {
-            const data = nodeExhibitData[nodeId];
-            if (!data) return;
-
-            defaultState.style.display = 'none';
-            contentState.style.display = 'block';
-
-            loadImage(data.imagePath);
-
-            asideTitle.innerText = data.title;
-            asideTags.innerText = data.tags;
-            asideDesc.innerHTML = data.desc;
-
-            specsBody.innerHTML = '';
-            for (const [key, value] of Object.entries(data.specs)) {
-                specsBody.innerHTML += `<tr><th scope="row">${key}</th><td>${value}</td></tr>`;
-            }
-
-            if (data.officialUrl) {
-                asideLinkContainer.innerHTML = `
-                    <a href="${data.officialUrl}" target="_blank" rel="noopener noreferrer" class="external-link-btn" aria-label="View historical archives for ${data.title} in a new tab">
-                        View Historical Records ${externalIcon}
-                    </a>
-                `;
-            } else {
-                asideLinkContainer.innerHTML = '';
-            }
-
-            nodes.forEach(n => n.classList.remove('node-active'));
-            document.getElementById(nodeId).classList.add('node-active');
-        }
-
-        nodes.forEach(node => {
-            node.addEventListener('click', function() { selectAndDisplayNode(this.id); });
-        });
-
-        function updateTimelineMap(currentYear) {
-            yearDisplay.innerText = currentYear;
-            slider.value = currentYear;
-
-            nodes.forEach(node => {
-                const nodeYear = parseInt(node.getAttribute('data-year'));
-                if (nodeYear <= currentYear) {
-                    node.style.opacity = '1'; node.style.transform = 'scale(1)';
-                } else {
-                    node.style.opacity = '0'; node.style.transform = 'scale(0)';
-                }
-            });
-
-            lines.forEach(line => {
-                const lineYear = parseInt(line.getAttribute('data-year'));
-                if (lineYear <= currentYear) { line.style.opacity = '0.6'; } 
-                else { line.style.opacity = '0'; }
-            });
-        }
-
-        playBtn.addEventListener('click', () => {
-            if (isPlaying) {
-                clearInterval(playInterval); playBtn.innerHTML = playIcon; isPlaying = false;
-            } else {
-                if (parseInt(slider.value) >= 1990) slider.value = 1969;
-                playBtn.innerHTML = pauseIcon; isPlaying = true;
-                playInterval = setInterval(() => {
-                    let y = parseInt(slider.value);
-                    if (y < 1990) updateTimelineMap(y + 1); 
-                    else { clearInterval(playInterval); playBtn.innerHTML = playIcon; isPlaying = false; }
-                }, 600);
-            }
-        });
-
-        slider.addEventListener('input', (e) => {
-            updateTimelineMap(e.target.value);
-            if (isPlaying) { clearInterval(playInterval); playBtn.innerHTML = playIcon; isPlaying = false; }
-        });
-
-        updateTimelineMap(1969);
-    </script>
 </body>
 </html>
