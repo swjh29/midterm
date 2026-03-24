@@ -94,7 +94,7 @@
             border: 1px dashed #999;
             color: #555;
             font-weight: bold;
-            text-align: center; /* 修复小屏幕文字居中 */
+            text-align: center; 
         }
 
         .node {
@@ -130,19 +130,12 @@
         }
         .btn:active { box-shadow: none; transform: translate(2px, 2px); }
 
-        /* ==========================================================
-           👇👇👇 下面是我为你添加的响应式代码 👇👇👇
-           ========================================================== */
         @media (max-width: 800px) {
             .grid-container {
-                /* 将网格改为单列布局 */
                 grid-template-columns: 1fr; 
-                /* 重新分配高度：头部自适应，地图占屏幕一半，侧边栏和底部自适应 */
                 grid-template-rows: auto 50vh auto auto; 
-                /* 允许页面在小屏幕上垂直滚动 */
                 height: auto;
                 min-height: 100vh;
-                /* 改变区块堆叠顺序：从上到下依次为 头部 -> 地图 -> 侧边栏 -> 底部 */
                 grid-template-areas: 
                     "header"
                     "map"
@@ -151,21 +144,16 @@
             }
 
             header {
-                /* 小屏幕下让标题和按钮上下排列，避免重叠 */
                 flex-direction: column;
                 align-items: flex-start;
-                padding: 30px 10px 10px 10px; /* 留出顶部 Label 的空间 */
+                padding: 30px 10px 10px 10px; 
                 gap: 15px;
             }
 
             footer div {
-                /* 调整底部时间轴在手机上的边距，防止溢出屏幕 */
                 padding: 0 10px !important; 
             }
         }
-        /* ==========================================================
-           👆👆👆 响应式代码结束 👆👆👆
-           ========================================================== */
 
     </style>
 </head>
