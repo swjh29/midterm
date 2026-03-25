@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARPANET History: The Foundation of the Internet</title>
+    <style>
+        :root {
+            --bg-body: #F9F9F7;
+            --bg-surface: #FFFFFF;
+            --primary-dark: #1F2937;
+            --accent-red: #A51C30;
+            --accent-blue: #4682B4;
+            --text-main: #212529;
+            --text-light: #6C757D;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px rgba(31, 41, 55, 0.1);
+            --shadow-lg: 0 12px 24px rgba(31, 41, 55, 0.15);
+            --border-radius: 8px;
+            --font-serif: 'Georgia', 'Playfair Display', serif;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body { 
+            font-family: var(--font-sans); 
+            background-color: var(--bg-body); 
+            color: var(--text-main); 
+            line-height: 1.8; 
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        *:focus-visible { outline: 3px solid var(--accent-red); outline-offset: 3px; }
+        
+        a { 
+            color: var(--accent-blue); 
+            text-decoration: none; 
+            border-bottom: 1px solid transparent; 
+            transition: all 0.2s; 
+        }
+        
+        a:hover { 
+            color: var(--accent-red); 
+            border-bottom-color: var(--accent-red); 
+        }
+
+        header {
+            background-color: var(--primary-dark); 
+            color: white;
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between;
+            padding: 0 2rem; 
+            height: 70px;
+            box-shadow: var(--shadow-md); 
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand h1 { 
+            font-family: var(--font-serif); 
+            font-size: 1.5rem; 
+            font-weight: normal; 
+            letter-spacing: 1px;
+        }
+
+        .brand span { 
+            color: var(--accent-red); 
+            font-weight: bold;
+        }
+
+        nav ul { 
+            display: flex; 
+            gap: 2rem; 
+            list-style: none; 
+        }
+
+        nav a { 
+            color: #E0E1DD; 
+            font-size: 0.9rem; 
+            font-weight: 500; 
+            text-transform: uppercase; 
+            border: none;
+        }
+
+        nav a:hover, nav a.active {
+            color: white;
+        }
+
+        main {
+            flex: 1;
+            padding: 3rem 1.5rem;
+        }
+
+        .article-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--bg-surface);
+            padding: 4rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            border-top: 5px solid var(--accent-red);
+        }
+
+        h2 {
+            font-family: var(--font-serif);
+            font-size: 2.5rem;
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        h3 {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #E2E8F0;
+            padding-bottom: 0.5rem;
+        }
+
+        p {
+            font-size: 1.05rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-main);
+        }
+
+        .highlight-box {
+            background-color: #F1F5F9;
+            border-left: 4px solid var(--accent-blue);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            font-style: italic;
+            color: var(--primary-dark);
+        }
+
+        .resource-list {
+            list-style: none;
+            margin-top: 1.5rem;
+        }
+
+        .resource-card {
+            display: block;
+            background: var(--bg-surface);
+            border: 1px solid #E2E8F0;
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .resource-card:hover {
+            border-color: var(--accent-blue);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+            border-bottom: 1px solid var(--accent-blue);
+        }
+
+        .resource-title {
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .resource-title svg {
+            margin-left: 8px;
+            width: 16px;
+            height: 16px;
+            color: var(--accent-blue);
+        }
+
+        .resource-desc {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin: 0;
+        }
+
+        footer {
+            background: var(--bg-surface);
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid #E2E8F0;
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            .article-container { padding: 2rem; }
+            h2 { font-size: 2rem; }
+            header { flex-direction: column; height: auto; padding: 1rem; gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand"><h1>ARPANET Archive <span>/ Historical Overview</span></h1></div>
+        <nav aria-label="Main Navigation">
+            <ul>
+                <li><a href="index.html">Exhibit Explorer</a></li>
+                <li><a href="#" class="active" aria-current="page">History</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <article class="article-container">
+            <h2>The Dawn of the Intergalactic Computer Network</h2>
+            
+            <p>The Advanced Research Projects Agency Network (ARPANET) was the world's first wide-area packet-switched network with distributed control and the first network to implement the TCP/IP protocol suite. Funded by the Advanced Research Projects Agency (ARPA) of the United States Department of Defense, it serves as the direct technical foundation of the modern Internet.</p>
+
+            <p>Conceived in the late 1960s amid the geopolitical tensions of the Cold War, the ARPANET was initially driven by a need for survivable communications. Traditional circuit-switched telephone networks were highly vulnerable; if a central routing hub was destroyed, the entire network would fail. Researchers like Paul Baran at the RAND Corporation and Donald Davies at the National Physical Laboratory simultaneously proposed a radically new method: <strong>packet switching</strong>.</p>
+
+            <div class="highlight-box">
+                "It was the first time that computers were connected together in a way that allowed them to share resources dynamically, setting the stage for a revolution in global communication."
+            </div>
+
+            <h3>The Genesis of the Nodes</h3>
+            
+            <p>The practical construction of the network was awarded to Bolt Beranek and Newman (BBN), who developed the Interface Message Processors (IMPs)—the ancestors of modern routers. The initial network, activated in the fall of 1969, consisted of four specialized academic and research nodes:</p>
+            
+            <ul>
+                <li><strong>UCLA:</strong> Focused on network measurement and theory under Leonard Kleinrock.</li>
+                <li><strong>Stanford Research Institute (SRI):</strong> Operated the Network Information Center and advanced early hypertext under Douglas Engelbart.</li>
+                <li><strong>UC Santa Barbara:</strong> Explored interactive computer graphics and mathematics.</li>
+                <li><strong>University of Utah:</strong> Specialized in 3D visual computing under Ivan Sutherland.</li>
+            </ul>
+
+            <p>On October 29, 1969, the first host-to-host message was sent from UCLA to SRI. The researchers attempted to type "LOGIN", but the system crashed after the first two letters. Consequently, the first transmission on the precursor to the internet was simply "LO".</p>
+
+            <h3>Decommissioning and Legacy</h3>
+
+            <p>By the 1980s, the network had expanded globally. In 1983, the ARPANET officially transitioned from the original NCP protocol to the TCP/IP suite, a monumental event known as "Flag Day" that established the technical architecture of the modern Internet. As civilian and commercial networks adopted these protocols, the ARPANET became obsolete and was formally decommissioned in 1990.</p>
+
+            <h3>External Archives & Resources</h3>
+            <p>To further explore the primary documents, hardware schematics, and oral histories of the ARPANET, please consult the following institutional archives:</p>
+
+            <ul class="resource-list">
+                <li>
+                    <a href="https://www.computerhistory.org/internethistory/" target="_blank" rel="noopener noreferrer" class="resource-card">
+                        <div class="resource-title">
+                            Computer History Museum: Internet History 
+                            <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                        </div>
+                        <p class="resource-desc">Comprehensive timeline and artifact gallery featuring original IMP hardware and early network maps.</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://www.internetsociety.org/internet/history-internet/" target="_blank" rel="noopener noreferrer" class="resource-card">
+                        <div class="resource-title">
+                            Internet Society: Brief History of the Internet
+                            <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                        </div>
+                        <p class="resource-desc">Essays and overviews written by the original architects of the ARPANET and early internet protocols.</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://www.darpa.mil/about-us/timeline/arpanet" target="_blank" rel="noopener noreferrer" class="resource-card">
+                        <div class="resource-title">
+                            DARPA: The ARPANET Timeline
+                            <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                        </div>
+                        <p class="resource-desc">The official historical perspective from the Defense Advanced Research Projects Agency.</p>
+                    </a>
+                </li>
+            </ul>
+
+        </article>
+    </main>
+
+</body>
+</html>
