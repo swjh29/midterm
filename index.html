@@ -59,7 +59,11 @@
             box-shadow: inset 0 0 20px rgba(0,0,0,0.05); overflow: hidden;
         }
 
-        .world-label-abstract { position: absolute; font-family: var(--font-serif); font-size: 5rem; color: var(--primary-dark); opacity: 0.1; font-weight:bold; top: 40%; left: 30%; z-index: 1; pointer-events: none; }
+        .world-label-abstract { 
+            position: absolute; font-family: var(--font-serif); font-size: 5rem; 
+            color: var(--primary-dark); opacity: 0.1; font-weight:bold; top: 35%; left: 30%; 
+            z-index: 1; pointer-events: none; line-height: 1.2;
+        }
         
         .map-year-display { 
             position: absolute; top: 2.5rem; left: 2.5rem; font-family: var(--font-serif); 
@@ -151,6 +155,9 @@
         .tab-btn:hover { background: #CBD5E1; }
         
         .active-tab { background: var(--accent-red); color: white; border-color: #8A1527; }
+        
+        .play-btn { background: var(--primary-dark); color: white; margin-left: 1rem; }
+        .play-btn:hover { background: var(--accent-red); }
 
         input[type="radio"] { display: none; }
 
@@ -205,7 +212,10 @@
         </header>
 
         <main aria-label="Interactive Map">
-            <div class="world-label-abstract">UNITED STATES</div>
+            <div class="world-label-abstract">
+                UNITED STATES<br>
+                <span id="node-counter" style="font-size: 1.8rem; opacity: 0.5;">Active Nodes: 0</span>
+            </div>
             
             <div class="map-year-display" id="disp-1969">1969</div>
             <div class="map-year-display" id="disp-1970">1970</div>
@@ -247,15 +257,12 @@
                 </div>
                 <h2>University of California, Los Angeles</h2>
                 <span class="aside-tags">Host 01 / ARPANET Birthplace</span>
-                <p class="aside-desc">As the birthplace of the ARPANET, UCLA was selected to house the world's first Interface Message Processor (IMP) built by BBN. Under the leadership of Leonard Kleinrock, who pioneered the mathematical theory of packet switching, UCLA served as the Network Measurement Center.<br><br>On October 29, 1969, student programmer Charley Kline attempted to send the first host-to-host message to SRI. He typed "L", then "O". As he typed "G" for "LOGIN", the system crashed. Thus, the first message on the precursor to the internet was simply "LO".</p>
+                <p class="aside-desc">As the birthplace of the ARPANET, UCLA was selected to house the world's first Interface Message Processor (IMP) built by BBN. Under the leadership of Leonard Kleinrock, who pioneered the mathematical theory of packet switching, UCLA served as the Network Measurement Center.</p>
                 <table class="aside-specs"><tbody>
                     <tr><th scope="row">Date Online</th><td>Sept 2, 1969</td></tr>
                     <tr><th scope="row">Hardware System</th><td>SDS Sigma 7 / IMP #1</td></tr>
                     <tr><th scope="row">Key Figure</th><td>Leonard Kleinrock</td></tr>
                 </tbody></table>
-                <a href="https://conferences.ucla.edu/ucla-birthplace-of-the-internet/" target="_blank" rel="noopener noreferrer" class="external-link-btn">
-                    View Historical Records <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-                </a>
             </div>
 
             <div id="content-sri" class="node-content">
@@ -268,15 +275,12 @@
                 </div>
                 <h2>Stanford Research Institute (SRI)</h2>
                 <span class="aside-tags">Host 02 / NLS Research</span>
-                <p class="aside-desc">The Stanford Research Institute received the second IMP and was the recipient of the famous "LO" message. SRI was home to Douglas Engelbart's visionary Augmentation Research Center (ARC).<br><br>Having recently demonstrated the computer mouse, hypertext, and networked collaboration (NLS) in the 1968 "Mother of All Demos", SRI served as the Network Information Center (NIC) during the early ARPANET days, maintaining the official directory of all network nodes—essentially the early internet's yellow pages.</p>
+                <p class="aside-desc">The Stanford Research Institute received the second IMP and was the recipient of the famous "LO" message. SRI was home to Douglas Engelbart's visionary Augmentation Research Center (ARC).</p>
                 <table class="aside-specs"><tbody>
                     <tr><th scope="row">Date Online</th><td>Oct 1, 1969</td></tr>
                     <tr><th scope="row">Hardware System</th><td>SDS 940 / IMP #2</td></tr>
                     <tr><th scope="row">Key Figure</th><td>Douglas Engelbart</td></tr>
                 </tbody></table>
-                <a href="https://www.sri.com/story/timeline/arpanet/" target="_blank" rel="noopener noreferrer" class="external-link-btn">
-                    View Historical Records <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-                </a>
             </div>
 
             <div id="content-utah" class="node-content">
@@ -289,15 +293,12 @@
                 </div>
                 <h2>University of Utah</h2>
                 <span class="aside-tags">Host 04 / Computer Graphics</span>
-                <p class="aside-desc">Including the University of Utah as the fourth ARPANET node was a strategic choice designed to prove the network could share specialized, heterogeneous computing resources.<br><br>Led by computer graphics pioneer Ivan Sutherland, Utah was the global epicenter of 3D visual computing and the birthplace of the famous Utah Teapot. By connecting their powerful DEC PDP-10 mainframe to the network, researchers nationwide could remotely access cutting-edge graphics software, proving the ARPANET was a distributed computing platform.</p>
+                <p class="aside-desc">Led by computer graphics pioneer Ivan Sutherland, Utah was the global epicenter of 3D visual computing and the birthplace of the famous Utah Teapot. By connecting their powerful DEC PDP-10 mainframe to the network, researchers nationwide could remotely access cutting-edge graphics software.</p>
                 <table class="aside-specs"><tbody>
                     <tr><th scope="row">Date Online</th><td>Early 1970</td></tr>
                     <tr><th scope="row">Hardware System</th><td>DEC PDP-10 / IMP #4</td></tr>
                     <tr><th scope="row">Key Figure</th><td>Ivan Sutherland</td></tr>
                 </tbody></table>
-                <a href="https://www.lib.utah.edu/digital-scholarship/arpanet/" target="_blank" rel="noopener noreferrer" class="external-link-btn">
-                    View Historical Records <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-                </a>
             </div>
 
             <div id="content-govt" class="node-content">
@@ -310,15 +311,12 @@
                 </div>
                 <h2>RAND Corporation</h2>
                 <span class="aside-tags">Node 07 / Military & Policy</span>
-                <p class="aside-desc">Located in Santa Monica, the RAND Corporation represents the crucial military and strategic origins of the ARPANET.<br><br>Driven by Cold War nuclear threats in the early 1960s, RAND researcher Paul Baran authored pioneering papers on distributed communications. He envisioned a survivable network without a central command hub, utilizing message blocks. This meant the network could continue operating even if partial nodes were destroyed by a nuclear strike. RAND's connection physically linked this classified defense theory with ARPA's academic engineering.</p>
+                <p class="aside-desc">Driven by Cold War nuclear threats, RAND researcher Paul Baran authored pioneering papers on distributed communications. He envisioned a survivable network without a central command hub, utilizing message blocks.</p>
                 <table class="aside-specs"><tbody>
                     <tr><th scope="row">Date Online</th><td>Oct 1973</td></tr>
                     <tr><th scope="row">Hardware System</th><td>IBM 370/158</td></tr>
                     <tr><th scope="row">Key Figure</th><td>Paul Baran</td></tr>
                 </tbody></table>
-                <a href="https://www.rand.org/about/history/baran.html" target="_blank" rel="noopener noreferrer" class="external-link-btn">
-                    View Historical Records <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-                </a>
             </div>
 
             <div id="content-mit" class="node-content">
@@ -331,15 +329,12 @@
                 </div>
                 <h2>Massachusetts Institute of Technology</h2>
                 <span class="aside-tags">Host 15 / MULTICS Project</span>
-                <p class="aside-desc">As an East Coast academic powerhouse, MIT brought immense computing weight to the ARPANET. It was the home base of J.C.R. Licklider, who first conceptualized the "Intergalactic Computer Network" while serving as an ARPA director.<br><br>MIT's Project MAC utilized the ARPANET heavily to advance time-sharing operating system research, specifically the MULTICS project. MIT researchers played a central role in writing the early RFCs (Request for Comments) that defined the software protocol standards of the modern internet.</p>
+                <p class="aside-desc">MIT brought immense computing weight to the ARPANET. It was the home base of J.C.R. Licklider, who first conceptualized the "Intergalactic Computer Network" while serving as an ARPA director.</p>
                 <table class="aside-specs"><tbody>
                     <tr><th scope="row">Date Online</th><td>Dec 1975</td></tr>
                     <tr><th scope="row">Hardware System</th><td>DEC PDP-10 / IMP #15</td></tr>
                     <tr><th scope="row">Key Figure</th><td>J.C.R. Licklider</td></tr>
                 </tbody></table>
-                <a href="https://archivesspace.mit.edu/agents/corporate_entities/148" target="_blank" rel="noopener noreferrer" class="external-link-btn">
-                    View Historical Records <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-                </a>
             </div>
 
             <p style="font-size: 0.85rem; color: var(--text-light); border-top: 1px solid #E2E8F0; padding-top: 1rem; position: absolute; bottom: 2rem;">
@@ -354,13 +349,45 @@
                 <button class="tab-btn" id="btn-1970" onclick="updateTimeline(1970)">1970</button>
                 <button class="tab-btn" id="btn-1973" onclick="updateTimeline(1973)">1973</button>
                 <button class="tab-btn" id="btn-1975" onclick="updateTimeline(1975)">1975</button>
+                
+                <button class="tab-btn play-btn" id="play-pause-btn" onclick="togglePlay()">▶ Auto-Play</button>
             </div>
         </footer>
     </div>
 
     <script>
-        function updateTimeline(selectedYear) {
+        const timelineYears = [1969, 1970, 1973, 1975];
+        let isPlaying = false;
+        let playInterval;
+
+        function togglePlay() {
+            let playBtn = document.getElementById('play-pause-btn');
             
+            if (isPlaying === true) {
+                clearInterval(playInterval);
+                playBtn.innerText = "▶ Auto-Play";
+                isPlaying = false;
+            } else {
+                playBtn.innerText = "⏸ Pause";
+                isPlaying = true;
+                
+                let currentActiveBtn = document.querySelector('.active-tab');
+                let currentYear = parseInt(currentActiveBtn.innerText);
+                let currentIndex = timelineYears.indexOf(currentYear);
+                
+                playInterval = setInterval(function() {
+                    currentIndex = currentIndex + 1;
+                    
+                    if (currentIndex >= timelineYears.length) {
+                        currentIndex = 0;
+                    }
+                    
+                    updateTimeline(timelineYears[currentIndex]);
+                }, 1500); 
+            }
+        }
+
+        function updateTimeline(selectedYear) {
             let buttons = document.querySelectorAll('.tab-btn');
             for (let i = 0; i < buttons.length; i++) {
                 buttons[i].classList.remove('active-tab');
@@ -373,19 +400,25 @@
             }
             document.getElementById('disp-' + selectedYear).style.opacity = '0.2';
 
+            let activeNodeCount = 0; 
             let nodes = document.querySelectorAll('.node');
+            
             for (let i = 0; i < nodes.length; i++) {
                 let nodeYear = parseInt(nodes[i].getAttribute('data-year'));
+                
                 if (nodeYear <= selectedYear) {
                     nodes[i].style.opacity = '1';
                     nodes[i].style.transform = 'scale(1)';
                     nodes[i].style.pointerEvents = 'auto';
+                    activeNodeCount++;
                 } else {
                     nodes[i].style.opacity = '0';
                     nodes[i].style.transform = 'scale(0)';
                     nodes[i].style.pointerEvents = 'none';
                 }
             }
+
+            document.getElementById('node-counter').innerText = "Active Nodes: " + activeNodeCount;
 
             let lines = document.querySelectorAll('.data-line');
             for (let i = 0; i < lines.length; i++) {
